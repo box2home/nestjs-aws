@@ -1,0 +1,114 @@
+{
+    "name": "nestjs-aws",
+    "private": true,
+    "version": "1.0.0",
+    "description": "Nest TypeScript AWS Module repository",
+    "author": "ABBES Mohamed Amine <abbesmohamedamine12@gmail.com>",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/box2home/nestjs-aws"
+    },
+    "bugs": "https://github.com/box2home/nestjs-aws/issues",
+    "main": "dist/index.js",
+    "types": "dist/index.js",
+    "engines": {
+        "node": ">=8.0.0",
+        "npm": ">=6.0.0"
+    },
+    "scripts": {
+        "start:dev": "tsc -w",
+        "build": "tsc",
+        "prepare": "npm run build",
+        "format": "prettier --write \"src/**/*.ts\"",
+        "lint": "tslint -p tsconfig.json -c tslint.json",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:cov": "jest --coverage",
+        "test:e2e": "jest --config ./test/jest-e2e.json"
+    },
+    "dependencies": {
+        "@nestjs/common": "^6.5.3",
+        "@nestjs/core": "^6.5.3",
+        "aws-sdk": "^2.554.0",
+        "class-transformer": "^0.2.3",
+        "mime-types": "~2.1.24",
+        "nodemailer": "^6.3.1",
+        "pretty-error": "^2.1.1",
+        "reflect-metadata": "~0.1.13",
+        "rimraf": "2.6.3",
+        "rxjs": "^6.5.2",
+        "xml2js": "^0.4.21",
+        "uuid": "^3.3.3"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^8.2.0",
+        "@commitlint/config-conventional": "^8.2.0",
+        "@nestjs/testing": "^6.6.4",
+        "@types/dotenv": "^6.1.1",
+        "@types/express": "^4.17.0",
+        "@types/express-rate-limit": "^3.3.0",
+        "@types/jest": "^24.0.13",
+        "@types/lodash": "^4.14.134",
+        "@types/mime-types": "^2.1.0",
+        "@types/morgan": "^1.7.35",
+        "@types/node": "^12.0.7",
+        "@types/supertest": "^2.0.7",
+        "@types/uuid": "^3.4.4",
+        "@typescript-eslint/eslint-plugin-tslint": "^1.11.0",
+        "@typescript-eslint/parser": "^1.11.0",
+        "cz-conventional-changelog": "^3.0.2",
+        "eslint": "^6.0.1",
+        "eslint-plugin-import-helpers": "^1.0.2",
+        "husky": "^3.0.8",
+        "jest": "^24.8.0",
+        "lint-staged": "~8.2.0",
+        "prettier": "^1.18.2",
+        "supertest": "^4.0.2",
+        "ts-jest": "^24.0.2",
+        "ts-node": "^8.1.0",
+        "tsc-watch": "^2.2.1",
+        "tsconfig-paths": "^3.8.0",
+        "tslint": "^5.17.0",
+        "tslint-config-prettier": "~1.18.0",
+        "tslint-consistent-codestyle": "^1.15.1",
+        "tslint-eslint-rules": "^5.4.0",
+        "tslint-plugin-prettier": "^2.0.1",
+        "typescript": "^3.4.3",
+        "uuid": "^3.3.3"
+    },
+    "jest": {
+        "moduleFileExtensions": [
+            "js",
+            "json",
+            "ts"
+        ],
+        "rootDir": "src",
+        "testRegex": ".spec.ts$",
+        "transform": {
+            "^.+\\.(t|j)s$": "ts-jest"
+        },
+        "collectCoverageFrom": [
+            "**/*.(t|j)s"
+        ],
+        "coverageDirectory": "../coverage",
+        "testEnvironment": "node"
+    },
+    "lint-staged": {
+        "*.@(ts)": [
+            "tslint --fix -p .",
+            "git add"
+        ]
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog",
+            "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
+        }
+    },
+    "husky": {
+        "hooks": {
+            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+        }
+    }
+}
