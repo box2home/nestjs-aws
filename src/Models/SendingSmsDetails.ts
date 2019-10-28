@@ -1,4 +1,3 @@
-
 /**
  *
  *
@@ -6,21 +5,24 @@
  * @class AwsSmsDetails
  */
 export class AwsSmsDetails {
-    mobileNumberClient: string;
-    messageToSendToClient: string;
+    mobileNumberCLIENT: string;
+    messageToSEND: string;
     subjectOfSMS: string;
 
-   /**
-    * Creates an instance of AwsSmsDetails.
-    * @param {string} mobileNumberClient
-    * @param {string} messageToSend
-    * @param {string} subjectOfSms
-    * @memberof AwsSmsDetails
-    */
-   constructor(mobileNumberClient: string, messageToSend: string, subjectOfSms: string) {
-        this.mobileNumberClient = mobileNumberClient;
-        this.messageToSendToClient = messageToSend;
-        this.subjectOfSMS = subjectOfSms;
+    /**
+     * Creates an instance of AwsSmsDetails.
+     * @param {string} mobileNumberCLIENT
+     * @param {string} messageToSEND
+     * @param {string} subjectOfSMS
+     * @memberof AwsSmsDetails
+     */
+    constructor(
+        mobileNumberCLIENT: string,
+        messageToSEND: string,
+        subjectOfSMS: string,
+    ) {
+        this.mobileNumberCLIENT = mobileNumberCLIENT;
+        this.messageToSEND = messageToSEND;
+        this.subjectOfSMS = subjectOfSMS;
     }
-
 }
