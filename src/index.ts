@@ -13,3 +13,4 @@ export * from './interfaces/aws-sns-module-options.interface';
 export * from './interfaces/aws-s3-module-options-params.interface';
 export * from './interfaces/aws-ses-module-options-params.interface';
 export * from './interfaces/aws-sns-module-options-params.interface';
+export * from './service/aws-logger.service';
