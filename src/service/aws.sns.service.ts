@@ -1,18 +1,17 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
-import { AwsSmsDetails } from '../Models/sending-sms-details';
+import { AwsSmsDetails, ISNSConfigOptions } from '..';
 import { CONFIG_OPTIONS_FACTORY } from '../constants';
-import { ISNSConfigOptions } from '../interfaces/aws-sns-module-options-params.interface';
 import { AwsLogger } from './aws-logger.service';
+
 /**
- *
- *
  * @export
  * @class AwsSnsService
  */
 @Injectable()
 export class AwsSnsService {
     private readonly _sns: AWS.SNS;
+
     constructor(
         @Inject(CONFIG_OPTIONS_FACTORY) private _options: ISNSConfigOptions,
         private readonly _logger: AwsLogger,

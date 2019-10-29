@@ -1,13 +1,11 @@
 'use strict';
-import { Injectable, Inject } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
-import { AwsMailDetails } from '../Models/sending-mail-details';
+import { AwsMailDetails, ISESConfigOptions } from '..';
 import { CONFIG_OPTIONS_FACTORY } from '../constants';
-import { ISESConfigOptions } from '../interfaces/aws-ses-module-options-params.interface';
 import { AwsLogger } from './aws-logger.service';
+
 /**
- *
- *
  * @export
  * @class AwsSesService
  */

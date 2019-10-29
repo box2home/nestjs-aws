@@ -1,4 +1,4 @@
-import { Module, DynamicModule } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { AwsSnsService } from './service/aws.sns.service';
 import { CONFIG_OPTIONS_FACTORY } from './constants';
 import { AwsSesService } from './service/aws.ses.service';
@@ -7,9 +7,8 @@ import { ISESModuleAsyncOptions } from './interfaces/aws-ses-module-options.inte
 import { IS3ModuleAsyncOptions } from './interfaces/aws-s3-module-options.interface';
 import { AwsS3Service } from './service/aws.s3.service';
 import { GeneratorService } from './service/generator.service';
+
 /**
- *
- *
  * @export
  * @class AwsModule
  */

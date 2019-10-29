@@ -1,8 +1,6 @@
 /**
- *
- *
  * @export
- * @interface SNSConfigOptions
+ * @interface ISNSConfigOptions
  */
 export interface ISNSConfigOptions {
     awsSnsAccessKeyID: string;
