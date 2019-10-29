@@ -1,8 +1,9 @@
 import { Injectable, Inject } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
-import { AwsSmsDetails } from '../Models/SendingSmsDetails';
+import { AwsSmsDetails } from '../Models/sending-sms-details';
 import { CONFIG_OPTIONS_FACTORY } from '../constants';
-import { SNSConfigOptions } from '../Models/AwsModuleSnsAsync';
+import { ISNSConfigOptions } from '../interfaces/aws-sns-module-options-params.interface';
+import { AwsLogger } from './aws-logger.service';
 /**
  *
  *
@@ -12,10 +13,11 @@ import { SNSConfigOptions } from '../Models/AwsModuleSnsAsync';
 @Injectable()
 export class AwsSnsService {
     private readonly _sns: AWS.SNS;
-    smsNotification = new AwsSmsDetails('', '', '');
     constructor(
-        @Inject(CONFIG_OPTIONS_FACTORY) private _options: SNSConfigOptions,
+        @Inject(CONFIG_OPTIONS_FACTORY) private _options: ISNSConfigOptions,
+        private readonly _logger: AwsLogger,
     ) {
+        this._logger.log('initialising Aws Module', 'AWS SNS SERVICE');
         AWS.config.update({
             accessKeyId: this._options.awsSnsAccessKeyID, // ConfigService.AWS_ACCESS_KEY_ID,//
             secretAccessKey: this._options.awsSnsSecretAccessKEY, //  ConfigService.AWS_SECRET_ACCESS_KEY,//
@@ -39,10 +41,6 @@ export class AwsSnsService {
         messageToSend: string,
         subjectOfSms: string,
     ): Promise<AwsSmsDetails> {
-        this.smsNotification.mobileNumberCLIENT = mobileNumber;
-        this.smsNotification.messageToSEND = messageToSend;
-        this.smsNotification.subjectOfSMS = subjectOfSms;
-
         this._sns.publish(
             {
                 Message: messageToSend,
@@ -53,10 +51,14 @@ export class AwsSnsService {
                 if (err) {
                     console.log(err);
                 } else {
-                    console.log(result, this.smsNotification);
+                    console.log(result);
                 }
             },
         );
-        return this.smsNotification;
+        return {
+            mobileNumberCLIENT: mobileNumber,
+            messageToSEND: messageToSend,
+            subjectOfSMS: subjectOfSms,
+        };
     }
 }

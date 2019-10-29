@@ -2,9 +2,9 @@ import { Module, DynamicModule } from '@nestjs/common';
 import { AwsSnsService } from './service/aws.sns.service';
 import { CONFIG_OPTIONS_FACTORY } from './constants';
 import { AwsSesService } from './service/aws.ses.service';
-import { ISNSModuleAsyncOptions } from './interfaces/awsModulesAsynSNS';
-import { ISesModuleAsyncOptions } from './interfaces/awsModuleAsynSES';
-import { IS3ModuleAsyncOptions } from './interfaces/awsModuleAsyncS3';
+import { ISNSModuleAsyncOptions } from './interfaces/aws-sns-module-options.interface';
+import { ISESModuleAsyncOptions } from './interfaces/aws-ses-module-options.interface';
+import { IS3ModuleAsyncOptions } from './interfaces/aws-s3-module-options.interface';
 import { AwsS3Service } from './service/aws.s3.service';
 import { GeneratorService } from './service/generator.service';
 /**
@@ -30,7 +30,7 @@ export class AwsModule {
         };
     }
 
-    static forRootSesAsync(options: ISesModuleAsyncOptions): DynamicModule {
+    static forRootSesAsync(options: ISESModuleAsyncOptions): DynamicModule {
         return {
             module: AwsModule,
             providers: [

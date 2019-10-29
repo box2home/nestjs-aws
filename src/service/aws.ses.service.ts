@@ -1,9 +1,10 @@
 'use strict';
 import { Injectable, Inject } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
-import { AwsMailDetails } from '../Models/SendingMailDetails';
+import { AwsMailDetails } from '../Models/sending-mail-details';
 import { CONFIG_OPTIONS_FACTORY } from '../constants';
-import { SESConfigOptions } from '../Models/AwsModuleSesAsync';
+import { ISESConfigOptions } from '../interfaces/aws-ses-module-options-params.interface';
+import { AwsLogger } from './aws-logger.service';
 /**
  *
  *
@@ -13,10 +14,12 @@ import { SESConfigOptions } from '../Models/AwsModuleSesAsync';
 @Injectable()
 export class AwsSesService {
     private readonly _transporter;
-    mailNotification = new AwsMailDetails('', '', '', '');
+
     constructor(
-        @Inject(CONFIG_OPTIONS_FACTORY) private _options: SESConfigOptions,
+        @Inject(CONFIG_OPTIONS_FACTORY) private _options: ISESConfigOptions,
+        private readonly _logger: AwsLogger,
     ) {
+        this._logger.log('initialising Aws Module', 'AWS SES SERVICE');
         // create reusable transporter object using the default SMTP transport
         this._transporter = nodemailer.createTransport({
             service: this._options.mailerSERVICE,
@@ -51,11 +54,6 @@ export class AwsSesService {
         contentOfMail: string,
         template,
     ): Promise<AwsMailDetails> {
-        this.mailNotification.recipientADDRESS = recipientAddress;
-        this.mailNotification.subjectOfMAIL = subjectOfMail;
-        this.mailNotification.contentOfMAIL = contentOfMail;
-        this.mailNotification.htmlTemplate = template;
-
         // send mail with defined transport object
         const info = await this._transporter.sendMail({
             to: recipientAddress, //  'bar@example.com, baz@example.com', here you can set more then one reciver address
@@ -66,6 +64,11 @@ export class AwsSesService {
 
         console.log('Message sent: %s', info.messageId);
         console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-        return this.mailNotification;
+        return {
+            recipientADDRESS: recipientAddress,
+            subjectOfMAIL: subjectOfMail,
+            contentOfMAIL: contentOfMail,
+            htmlTemplate: template,
+        };
     }
 }
