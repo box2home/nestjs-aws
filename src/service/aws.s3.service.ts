@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
 import * as mime from 'mime-types';
 import { IFile } from '../interfaces/IFile';
@@ -21,7 +21,7 @@ export class AwsS3Service {
         @Inject(CONFIG_OPTIONS_FACTORY) private _options: IS3ConfigOptions,
         private readonly _logger: AwsLogger,
     ) {
-        this._logger.log('initialising Aws Module', 'AWS S3 SERVICE');
+        Logger.log('initialising Aws Module', 'AWS S3 SERVICE');
         const options: AWS.S3.Types.ClientConfiguration = {
             apiVersion: '2010-12-01',
             region: 'eu-central-1',

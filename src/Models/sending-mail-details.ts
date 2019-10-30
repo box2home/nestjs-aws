@@ -1,3 +1,6 @@
+import { Attachment } from 'nodemailer/lib/mailer';
+import { Address } from 'aws-sdk/clients/ses';
+
 /**
  *
  *
@@ -5,28 +8,36 @@
  * @class AwsMailDetails
  */
 export class AwsMailDetails {
-    recipientADDRESS: string;
+    senderADDRESS?: Address;
+    recipientADDRESS: Address;
     subjectOfMAIL: string;
     contentOfMAIL: string;
-    htmlTemplate: string;
+    htmlTEMPLATE: string;
+    attachments?: Attachment[];
 
     /**
      * Creates an instance of AwsMailDetails.
-     * @param {string} recipientADDRESS
+     * @param {Address} senderAddress
+     * @param {Address} recipientADDRESS
      * @param {string} subjectOfMAIL
      * @param {string} contentOfMAIL
-     * @param {string} TEMPLATE
-     * @memberof IAwsMailDetails
+     * @param {string} htmlTemplate
+     * @param {Attachment[]} attachments
+     * @memberof AwsMailDetails
      */
     constructor(
-        recipientADDRESS: string,
+        senderAddress: Address,
+        recipientADDRESS: Address,
         subjectOfMAIL: string,
         contentOfMAIL: string,
         htmlTemplate: string,
+        attachments: Attachment[],
     ) {
+        this.senderADDRESS = senderAddress;
         this.recipientADDRESS = recipientADDRESS;
         this.subjectOfMAIL = subjectOfMAIL;
         this.contentOfMAIL = contentOfMAIL;
-        this.htmlTemplate = htmlTemplate;
+        this.htmlTEMPLATE = htmlTemplate;
+        this.attachments = attachments;
     }
 }
