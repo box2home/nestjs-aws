@@ -16,10 +16,12 @@
         "incremental": true
     },
     "include": [
-        "src/**/*", "index.ts"
+        "src/**/*",
+        "index.ts"
     ],
     "exclude": [
-        "node_modules", "dist",
+        "node_modules",
+        "dist",
         "**/*.spec.ts"
     ]
 }

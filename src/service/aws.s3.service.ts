@@ -6,9 +6,8 @@ import { GeneratorService } from './generator.service';
 import { CONFIG_OPTIONS_FACTORY } from '../constants';
 import { IS3ConfigOptions } from '../interfaces/aws-s3-module-options-params.interface';
 import { AwsLogger } from './aws-logger.service';
+
 /**
- *
- *
  * @export
  * @class AwsS3Service
  */

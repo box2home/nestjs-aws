@@ -2,8 +2,6 @@ import { Attachment } from 'nodemailer/lib/mailer';
 import { Address } from 'aws-sdk/clients/ses';
 
 /**
- *
- *
  * @export
  * @class AwsMailDetails
  */

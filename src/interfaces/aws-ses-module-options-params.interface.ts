@@ -1,8 +1,6 @@
 /**
- *
- *
  * @export
- * @interface SESConfigOptions
+ * @interface ISESConfigOptions
  */
 export interface ISESConfigOptions {
     mailerSERVICE: string;

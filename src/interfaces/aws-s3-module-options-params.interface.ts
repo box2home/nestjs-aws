@@ -1,8 +1,6 @@
 /**
- *
- *
  * @export
- * @interface S3ConfigOptions
+ * @interface IS3ConfigOptions
  */
 export interface IS3ConfigOptions {
     awsS3AccessKeyID: string;
