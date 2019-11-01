@@ -3,9 +3,8 @@ import * as AWS from 'aws-sdk';
 import * as mime from 'mime-types';
 import { IFile } from '../interfaces/IFile';
 import { GeneratorService } from './generator.service';
-import { CONFIG_OPTIONS_FACTORY } from '../constants';
+import { CONFIG_CONNECTION_OPTIONS } from '../constants';
 import { IS3ConfigOptions } from '../interfaces/aws-s3-module-options-params.interface';
-import { AwsLogger } from './aws-logger.service';
 
 /**
  * @export
@@ -17,8 +16,7 @@ export class AwsS3Service {
 
     constructor(
         public generatorService: GeneratorService,
-        @Inject(CONFIG_OPTIONS_FACTORY) private _options: IS3ConfigOptions,
-        private readonly _logger: AwsLogger,
+        @Inject(CONFIG_CONNECTION_OPTIONS) private _options: IS3ConfigOptions,
     ) {
         Logger.log('initialising Aws Module', 'AWS S3 SERVICE');
         const options: AWS.S3.Types.ClientConfiguration = {

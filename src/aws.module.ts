@@ -1,6 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { AwsSnsService } from './service/aws.sns.service';
-import { CONFIG_OPTIONS_FACTORY } from './constants';
+import { CONFIG_CONNECTION_OPTIONS } from './constants';
 import { AwsSesService } from './service/aws.ses.service';
 import { ISNSModuleAsyncOptions } from './interfaces/aws-sns-module-options.interface';
 import { ISESModuleAsyncOptions } from './interfaces/aws-ses-module-options.interface';
@@ -19,7 +19,7 @@ export class AwsModule {
             module: AwsModule,
             providers: [
                 {
-                    provide: CONFIG_OPTIONS_FACTORY,
+                    provide: CONFIG_CONNECTION_OPTIONS,
                     useFactory: options.useFactory,
                     inject: options.inject || [],
                 },
@@ -34,7 +34,7 @@ export class AwsModule {
             module: AwsModule,
             providers: [
                 {
-                    provide: CONFIG_OPTIONS_FACTORY,
+                    provide: CONFIG_CONNECTION_OPTIONS,
                     useFactory: options.useFactory,
                     inject: options.inject || [],
                 },
@@ -49,7 +49,7 @@ export class AwsModule {
             module: AwsModule,
             providers: [
                 {
-                    provide: CONFIG_OPTIONS_FACTORY,
+                    provide: CONFIG_CONNECTION_OPTIONS,
                     useFactory: options.useFactory,
                     inject: options.inject || [],
                 },

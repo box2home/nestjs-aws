@@ -1,5 +1,3 @@
-export * from './Models/sending-mail-details';
-export * from './Models/sending-sms-details';
 export * from './constants';
 export * from './service/aws.s3.service';
 export * from './service/aws.ses.service';
@@ -11,6 +9,4 @@ export * from './interfaces/aws-ses-module-options.interface';
 export * from './interfaces/aws-s3-module-options.interface';
 export * from './interfaces/aws-sns-module-options.interface';
 export * from './interfaces/aws-s3-module-options-params.interface';
-export * from './interfaces/aws-ses-module-options-params.interface';
-export * from './interfaces/aws-sns-module-options-params.interface';
 export * from './service/aws-logger.service';

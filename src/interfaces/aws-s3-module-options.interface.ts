@@ -7,6 +7,8 @@ import { IS3ConfigOptions } from './aws-s3-module-options-params.interface';
  * @extends {Pick<ModuleMetadata, 'imports'>}
  */
 export interface IS3ModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
-    useFactory: (...args: any[]) => Promise<IS3ConfigOptions> | IS3ConfigOptions;
+    useFactory: (
+        ...args: any[]
+    ) => Promise<IS3ConfigOptions> | IS3ConfigOptions;
     inject?: any[];
 }

@@ -1,6 +1,5 @@
 import { ModuleMetadata } from '@nestjs/common/interfaces';
-import { ISNSConfigOptions } from './aws-sns-module-options-params.interface';
-
+import { ConfigurationOptions } from 'aws-sdk/lib/config';
 /**
  *  @export
  * @interface ISNSModuleAsyncOptions
@@ -8,6 +7,8 @@ import { ISNSConfigOptions } from './aws-sns-module-options-params.interface';
  */
 export interface ISNSModuleAsyncOptions
     extends Pick<ModuleMetadata, 'imports'> {
-    useFactory: (...args: any[]) => Promise<ISNSConfigOptions> | ISNSConfigOptions;
+    useFactory: (
+        ...args: any[]
+    ) => Promise<ConfigurationOptions> | ConfigurationOptions;
     inject?: any[];
 }

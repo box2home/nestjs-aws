@@ -1,5 +1,5 @@
 import { ModuleMetadata } from '@nestjs/common/interfaces';
-import { ISESConfigOptions } from './aws-ses-module-options-params.interface';
+import { Options } from 'nodemailer/lib/smtp-transport';
 
 /**
  * @export
@@ -8,6 +8,6 @@ import { ISESConfigOptions } from './aws-ses-module-options-params.interface';
  */
 export interface ISESModuleAsyncOptions
     extends Pick<ModuleMetadata, 'imports'> {
-    useFactory: (...args: any[]) => Promise<ISESConfigOptions> | ISESConfigOptions;
+    useFactory: (...args: any[]) => Promise<Options> | Options;
     inject?: any[];
 }

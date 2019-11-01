@@ -1,8 +1,8 @@
-import { Injectable, Inject, Logger } from '@nestjs/common';
+import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
-import { AwsSmsDetails} from '../Models/sending-sms-details';
-import { CONFIG_OPTIONS_FACTORY } from '../constants';
-import { ISNSConfigOptions } from '../interfaces/aws-sns-module-options-params.interface';
+import { CONFIG_CONNECTION_OPTIONS } from '../constants';
+import { ConfigurationOptions } from 'aws-sdk/lib/config';
+import { PublishResponse } from 'aws-sdk/clients/sns';
 /**
  * @export
  * @class AwsSnsService
@@ -12,15 +12,11 @@ export class AwsSnsService {
     private readonly _sns: AWS.SNS;
     private _smsOptions: AWS.SNS.PublishInput;
     constructor(
-        @Inject(CONFIG_OPTIONS_FACTORY) private _options: ISNSConfigOptions,
+        @Inject(CONFIG_CONNECTION_OPTIONS)
+        private _options: ConfigurationOptions,
     ) {
         Logger.log('initialising AWS Module', 'SNS SERVICE');
-        AWS.config.update({
-            accessKeyId: this._options.awsSnsAccessKeyID, // ConfigService.AWS_ACCESS_KEY_ID,//
-            secretAccessKey: this._options.awsSnsSecretAccessKEY, //  ConfigService.AWS_SECRET_ACCESS_KEY,//
-            region: this._options.awsSnsREGION, //   ConfigService.AWS_REGION
-        });
-
+        AWS.config.update(this._options);
         this._sns = new AWS.SNS();
     }
 
@@ -37,24 +33,36 @@ export class AwsSnsService {
         mobileNumber: string,
         messageToSend: string,
         subjectOfSms: string,
-    ): Promise<AwsSmsDetails> {
+    ) {
         this._smsOptions = {
             Message: messageToSend,
             Subject: subjectOfSms,
             PhoneNumber: mobileNumber,
         };
 
-        this._sns.publish(this._smsOptions, (error: any, result: any) => {
-            if (error) {
-                Logger.error('ERROR ==>', error);
-            } else {
-                Logger.log('SUCCESS PUBLISHING SMS', result);
-            }
-        });
-        return {
-            mobileNumberCLIENT: mobileNumber,
-            messageToSEND: messageToSend,
-            subjectOfSMS: subjectOfSms,
-        };
+        return [
+            await this._sns
+                .publish(this._smsOptions)
+                .promise()
+                .then((info: PublishResponse) => {
+                    console.log('RESPONSE SMS DETAILS ====>', info);
+                    return [
+                        {
+                            success: HttpStatus.OK,
+                            message: 'SMS SUCCESSFULLY SENDED',
+                            data: info,
+                        },
+                    ];
+                })
+                .catch(err => {
+                    console.log('ERROR : FAILD REQUEST !! ====>', err);
+                    return [
+                        {
+                            error: HttpStatus.EXPECTATION_FAILED,
+                            message: ['FAILD TO SEND SMS ', err],
+                        },
+                    ];
+                }),
+        ];
     }
 }

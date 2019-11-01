@@ -1,35 +1,24 @@
 'use strict';
-import { Injectable, Inject, Logger } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
-import { AwsMailDetails } from '../Models/sending-mail-details';
-import { CONFIG_OPTIONS_FACTORY } from '../constants';
-import { ISESConfigOptions } from '../interfaces/aws-ses-module-options-params.interface';
+import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
+import { CONFIG_CONNECTION_OPTIONS } from '../constants';
 import { Attachment } from 'nodemailer/lib/mailer';
-import { Address } from 'aws-sdk/clients/ses';
+import { Email } from 'aws-sdk/clients/connect';
+import { Options } from 'nodemailer/lib/smtp-connection';
+import {
+    Transporter,
+    SendMailOptions,
+    createTransport,
+    SentMessageInfo,
+} from 'nodemailer';
 @Injectable()
 export class AwsSesService {
-    private readonly _transporter: nodemailer.Transporter;
-    private _mailOptions: nodemailer.SendMailOptions;
+    private readonly _transporter: Transporter;
+    private _mailOptions: SendMailOptions;
 
-    constructor(
-        @Inject(CONFIG_OPTIONS_FACTORY) private _options: ISESConfigOptions,
-    ) {
+    constructor(@Inject(CONFIG_CONNECTION_OPTIONS) private _options: Options) {
         Logger.log('initialising AWS Module', 'SES SERVICE');
         // create reusable transporter object using the default SMTP transport
-        this._transporter = nodemailer.createTransport({
-            service: this._options.mailerSERVICE,
-            host: this._options.mailerHOST,
-            port: this._options.mailerPORT,
-            secure: false,
-            requireTLS: true,
-            tls: {
-                rejectUnauthorized: false,
-            },
-            auth: {
-                user: this._options.mailerUSER,
-                pass: this._options.mailerPASSWORD,
-            },
-        });
+        this._transporter = createTransport(this._options);
     }
     /**
      *
@@ -44,13 +33,13 @@ export class AwsSesService {
      * @memberof AwsSesService
      */
     async sendMail(
-        recipientAddress: Address,
+        recipientAddress: Email,
         subjectOfMail: string,
         contentOfMail: string,
         template: string,
         attachment?: Attachment[],
-        senderAddress?: Address,
-    ): Promise<AwsMailDetails> {
+        senderAddress?: Email,
+    ) {
         // setup e-mail data with unicode symbols
         this._mailOptions = {
             from: senderAddress,
@@ -61,22 +50,31 @@ export class AwsSesService {
             attachments: attachment,
         };
 
-        // promise send mail
-        this._transporter
-            .sendMail(this._mailOptions)
-            .then((info: nodemailer.SentMessageInfo) => info.messageId)
-            .catch((err) => {
-                Logger.log('ERROR ==>', err);
-            });
+        return [
+            // promise send mail
+            await this._transporter
+                .sendMail(this._mailOptions)
+                .then((info: SentMessageInfo) => {
+                    console.log('RESPONSE MAIL DETAILS ====>', info);
+                    return [
+                        {
+                            success: HttpStatus.OK,
+                            message: 'MAIL SUCCESSFULLY SENDED',
+                            data: info,
+                        },
+                    ];
+                })
+                .catch((err) => {
+                    console.log('ERROR : FAILD REQUEST!!====>', err);
+                    return [
+                        {
+                            error: HttpStatus.EXPECTATION_FAILED,
+                            message: ['FAILD TO SEND MAIL', err],
+                        },
+                    ];
+                }),
+        ];
         //  console.log('Message sent: %s', info.messageId);
         // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-        return {
-            senderADDRESS: senderAddress,
-            recipientADDRESS: recipientAddress,
-            subjectOfMAIL: subjectOfMail,
-            contentOfMAIL: contentOfMail,
-            htmlTEMPLATE: template,
-            attachments: attachment,
-        };
     }
 }
