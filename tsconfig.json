@@ -1,8 +1,9 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "declaration": false,
+        "declaration": true,
         "noImplicitAny": false,
+        "importHelpers": true,
         "removeComments": true,
         "noLib": false,
         "allowSyntheticDefaultImports": true,
@@ -10,7 +11,6 @@
         "experimentalDecorators": true,
         "target": "es2017",
         "sourceMap": true,
-        "allowJs": true,
         "outDir": "./dist",
         "baseUrl": "./src",
         "incremental": true
@@ -21,7 +21,6 @@
     ],
     "exclude": [
         "node_modules",
-        "dist",
         "**/*.spec.ts"
     ]
 }

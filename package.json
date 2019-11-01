@@ -19,14 +19,15 @@
         "release": "npx -p @semantic-release/changelog -p @semantic-release/git@beta -p semantic-release@beta  semantic-release --no-ci",
         "commit": "npx git-cz",
         "start:dev": "tsc -w",
-        "build": "tsc",
-        "prepare": "npm run build",
+        "prebuild": "rm -rf dist",
+        "build": "tsc -p tsconfig.json",
         "format": "prettier --write \"src/**/*.ts\"",
         "lint": "tslint -p tsconfig.json -c tslint.json",
         "test": "jest",
         "test:watch": "jest --watch",
         "test:cov": "jest --coverage",
-        "test:e2e": "jest --config ./test/jest-e2e.json"
+        "test:e2e": "jest --config ./test/jest-e2e.json",
+        "prepare": "npm run build"
     },
     "dependencies": {
         "@nestjs/common": "^6.5.3",
