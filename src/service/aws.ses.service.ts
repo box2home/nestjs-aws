@@ -1,19 +1,13 @@
 'use strict';
-import { Injectable, Inject, Logger, HttpStatus } from '@nestjs/common';
-import { CONFIG_CONNECTION_OPTIONS } from '../constants';
-import { Attachment } from 'nodemailer/lib/mailer';
-import { Email } from 'aws-sdk/clients/connect';
+import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
+import { createTransport, SendMailOptions, SentMessageInfo, Transporter } from 'nodemailer';
 import { Options } from 'nodemailer/lib/smtp-connection';
-import {
-    Transporter,
-    SendMailOptions,
-    createTransport,
-    SentMessageInfo,
-} from 'nodemailer';
+
+import { CONFIG_CONNECTION_OPTIONS } from '../constants';
+
 @Injectable()
 export class AwsSesService {
     private readonly _transporter: Transporter;
-    private _mailOptions: SendMailOptions;
 
     constructor(@Inject(CONFIG_CONNECTION_OPTIONS) private _options: Options) {
         Logger.log('initialising AWS Module', 'SES SERVICE');
@@ -22,40 +16,15 @@ export class AwsSesService {
     }
     /**
      *
-     *
-     * @param {string} recipientAddress
-     * @param {string} subjectOfMail
-     * @param {string} contentOfMail
-     * @param {string} template
-     * @param {string} [senderAddress]
-     * @param {string[]} [attachement]
-     * @returns {Promise<AwsMailDetails>}
-     * @memberof AwsSesService
+     * @param {SendMailOptions} mailOptions
      */
-    async sendMail(
-        recipientAddress: Email,
-        subjectOfMail: string,
-        contentOfMail: string,
-        template: string,
-        attachment?: Attachment[],
-        senderAddress?: Email,
-    ) {
-        // setup e-mail data with unicode symbols
-        this._mailOptions = {
-            from: senderAddress,
-            to: recipientAddress, //  'bar@example.com, baz@example.com', here you can set more then one reciver address
-            subject: subjectOfMail, //   Subject line
-            text: contentOfMail, //    plain text body
-            html: template, //     html body
-            attachments: attachment,
-        };
-
+    async sendMail(mailOptions: SendMailOptions) {
         return [
             // promise send mail
             await this._transporter
-                .sendMail(this._mailOptions)
+                .sendMail(mailOptions)
                 .then((info: SentMessageInfo) => {
-                    console.log('RESPONSE MAIL DETAILS ====>', info);
+                    Logger.log('RESPONSE MAIL DETAILS ====>', info);
                     return [
                         {
                             success: HttpStatus.OK,
@@ -65,7 +34,7 @@ export class AwsSesService {
                     ];
                 })
                 .catch((err) => {
-                    console.log('ERROR : FAILD REQUEST!!====>', err);
+                    Logger.log('ERROR : FAILD REQUEST!!====>', err);
                     return [
                         {
                             error: HttpStatus.EXPECTATION_FAILED,
@@ -74,7 +43,5 @@ export class AwsSesService {
                     ];
                 }),
         ];
-        //  console.log('Message sent: %s', info.messageId);
-        // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
     }
 }
