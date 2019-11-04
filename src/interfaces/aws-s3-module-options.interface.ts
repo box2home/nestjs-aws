@@ -1,4 +1,5 @@
 import { ModuleMetadata } from '@nestjs/common/interfaces';
+
 import { IS3ConfigOptions } from './aws-s3-module-options-params.interface';
 
 /**

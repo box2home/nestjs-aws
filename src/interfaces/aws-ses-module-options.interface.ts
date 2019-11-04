@@ -1,5 +1,7 @@
 import { ModuleMetadata } from '@nestjs/common/interfaces';
-import { Options as SMTPTransportOptions} from 'nodemailer/lib/smtp-transport';
+import { Options } from 'nodemailer/lib/smtp-transport';
+
+export declare type SMTPTransportOptions = Options;
 
 /**
  * @export
