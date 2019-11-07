@@ -1,5 +1,5 @@
 'use strict';
-import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
+import { HttpStatus, HttpException, Inject, Injectable, Logger } from '@nestjs/common';
 import { createTransport, SendMailOptions, SentMessageInfo, Transporter } from 'nodemailer';
 import { Options } from 'nodemailer/lib/smtp-connection';
 
@@ -14,34 +14,30 @@ export class AwsSesService {
         // create reusable transporter object using the default SMTP transport
         this._transporter = createTransport(this._options);
     }
+
     /**
      *
      * @param {SendMailOptions} mailOptions
      */
     async sendMail(mailOptions: SendMailOptions) {
-        return [
-            // promise send mail
-            await this._transporter
-                .sendMail(mailOptions)
-                .then((info: SentMessageInfo) => {
-                    Logger.log('RESPONSE MAIL DETAILS ====>', info);
-                    return [
-                        {
-                            success: HttpStatus.OK,
-                            message: 'MAIL SUCCESSFULLY SENDED',
-                            data: info,
-                        },
-                    ];
-                })
-                .catch((err) => {
-                    Logger.log('ERROR : FAILD REQUEST!!====>', err);
-                    return [
-                        {
-                            error: HttpStatus.EXPECTATION_FAILED,
-                            message: ['FAILD TO SEND MAIL', err],
-                        },
-                    ];
-                }),
-        ];
+        // promise send mail
+        return this._transporter
+            .sendMail(mailOptions)
+            .then((info: SentMessageInfo) => {
+                Logger.log('success[sendMail]:', info);
+                return {
+                    statusCode: HttpStatus.OK,
+                    message: 'Mail Sent',
+                    data: info,
+                };
+            })
+            .catch((err) => {
+                Logger.log('error[sendMail]:', err);
+                throw new HttpException({
+                    statusCode: HttpStatus.BAD_REQUEST,
+                    message: 'Failed to send',
+                    data: err,
+                }, HttpStatus.BAD_REQUEST);
+            });
     }
 }
