@@ -1,8 +1,9 @@
 import { Injectable, Inject, Logger, HttpStatus, HttpException } from '@nestjs/common';
-import { CONFIG_CONNECTION_OPTIONS } from '../constants';
-import { ConfigurationOptions } from 'aws-sdk/lib/config';
+import { SNS } from 'aws-sdk';
 import { PublishResponse, PublishInput } from 'aws-sdk/clients/sns';
-import AWS, { SNS } from 'aws-sdk';
+import { ConfigurationOptions } from 'aws-sdk/lib/config';
+
+import { CONFIG_CONNECTION_OPTIONS } from '../constants';
 
 /**
  * @export
@@ -11,13 +12,9 @@ import AWS, { SNS } from 'aws-sdk';
 @Injectable()
 export class AwsSnsService {
     private readonly _sns: SNS;
-    constructor(
-        @Inject(CONFIG_CONNECTION_OPTIONS)
-        private _options: ConfigurationOptions,
-    ) {
+    constructor(@Inject(CONFIG_CONNECTION_OPTIONS) private _options: ConfigurationOptions) {
         Logger.log('initialising AWS Module', 'SNS SERVICE');
-        AWS.config.update(this._options);
-        this._sns = new AWS.SNS();
+        this._sns = new SNS(this._options);
     }
 
     async sendSMS(smsOptions: PublishInput) {

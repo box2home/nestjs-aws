@@ -1,10 +1,11 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
 import * as mime from 'mime-types';
-import { IFile } from '../interfaces/IFile';
-import { GeneratorService } from './generator.service';
+
 import { CONFIG_CONNECTION_OPTIONS } from '../constants';
 import { IS3ConfigOptions } from '../interfaces/aws-s3-module-options-params.interface';
+import { IFile } from '../interfaces/IFile';
+import { GeneratorService } from './generator.service';
 
 /**
  * @export
