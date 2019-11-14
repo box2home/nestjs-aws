@@ -16,24 +16,24 @@ export class AwsS3Service {
         this._s3 = new AWS.S3(_options);
     }
 
-    async upload(params: AWS.S3.Types.PutObjectRequest, callback?: (err: AWS.AWSError, data: AWS.S3.Types.PutObjectOutput) => void) {
-        return this._s3.putObject(params, callback)
+    async upload(params: AWS.S3.Types.PutObjectRequest) {
+        return this._s3.putObject(params)
             .promise()
             .then((info: AWS.S3.Types.PutObjectOutput) => {
-                Logger.log(` success[S3]: ${JSON.stringify(info)}`);
+                Logger.log(`success[S3]: ${JSON.stringify(info)}`);
                 return [
                     {
                         statusCode: HttpStatus.OK,
-                        message: 'Sms sent',
-                        data: info,
+                        message: 'success',
+                        data: { url: `https://${params.Bucket}.s3-${this._s3.config.region}.amazonaws.com/${params.Key}` },
                     },
                 ];
             })
-            .catch((err) => {
-                Logger.error('error[S3]:', err);
+            .catch((err: AWS.AWSError) => {
+                Logger.error(err.message, `success[S3]: ${JSON.stringify(err)}`);
                 throw new HttpException({
-                    statusCode: HttpStatus.BAD_REQUEST,
-                    message: 'Failed to upload',
+                    statusCode: err.statusCode,
+                    message: 'error',
                     data: err,
                 }, HttpStatus.BAD_REQUEST);
             });
