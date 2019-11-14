@@ -1,11 +1,7 @@
-import { Injectable, Inject, Logger } from '@nestjs/common';
+import { Injectable, Inject, Logger, HttpStatus, HttpException } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
-import * as mime from 'mime-types';
 
 import { CONFIG_CONNECTION_OPTIONS } from '../constants';
-import { IS3ConfigOptions } from '../interfaces/aws-s3-module-options-params.interface';
-import { IFile } from '../interfaces/IFile';
-import { GeneratorService } from './generator.service';
 
 /**
  * @export
@@ -15,36 +11,31 @@ import { GeneratorService } from './generator.service';
 export class AwsS3Service {
     private readonly _s3: AWS.S3;
 
-    constructor(
-        public generatorService: GeneratorService,
-        @Inject(CONFIG_CONNECTION_OPTIONS) private _options: IS3ConfigOptions,
-    ) {
+    constructor(@Inject(CONFIG_CONNECTION_OPTIONS) private _options: AWS.S3.Types.ClientConfiguration) {
         Logger.log('initialising Aws Module', 'AWS S3 SERVICE');
-        const options: AWS.S3.Types.ClientConfiguration = {
-            apiVersion: '2010-12-01',
-            region: 'eu-central-1',
-        };
-        options.credentials = {
-            accessKeyId: this._options.awsS3AccessKeyID,
-            secretAccessKey: this._options.awsS3SecretAccessKEY,
-        };
-        this._s3 = new AWS.S3(options);
+        this._s3 = new AWS.S3(_options);
     }
 
-    async uploadImage(file: IFile) {
-        const fileName = this.generatorService.fileName(<string>(
-            mime.extension(file.mimetype)
-        ));
-        const key = 'images/' + fileName;
-        await this._s3
-            .putObject({
-                Bucket: this._options.awsS3BucketNAME,
-                Body: file.buffer,
-                ACL: 'public-read',
-                Key: key,
+    async upload(params: AWS.S3.Types.PutObjectRequest, callback?: (err: AWS.AWSError, data: AWS.S3.Types.PutObjectOutput) => void) {
+        return this._s3.putObject(params, callback)
+            .promise()
+            .then((info: AWS.S3.Types.PutObjectOutput) => {
+                Logger.log(` success[S3]: ${JSON.stringify(info)}`);
+                return [
+                    {
+                        statusCode: HttpStatus.OK,
+                        message: 'Sms sent',
+                        data: info,
+                    },
+                ];
             })
-            .promise();
-
-        return key;
+            .catch((err) => {
+                Logger.error('error[S3]:', err);
+                throw new HttpException({
+                    statusCode: HttpStatus.BAD_REQUEST,
+                    message: 'Failed to upload',
+                    data: err,
+                }, HttpStatus.BAD_REQUEST);
+            });
     }
 }
