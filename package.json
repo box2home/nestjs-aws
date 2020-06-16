@@ -54,9 +54,9 @@
         "@types/jquery": "^3.3.31",
         "@types/lodash": "^4.14.134",
         "@types/mime-types": "^2.1.0",
-        "@types/nodemailer": "^6.2.2",
         "@types/morgan": "^1.7.35",
         "@types/node": "^12.0.7",
+        "@types/nodemailer": "^6.2.2",
         "@types/supertest": "^2.0.7",
         "@types/uuid": "^3.4.4",
         "@typescript-eslint/eslint-plugin-tslint": "^1.11.0",
@@ -65,11 +65,11 @@
         "eslint": "^6.0.1",
         "eslint-plugin-import-helpers": "^1.0.2",
         "husky": "^3.0.8",
-        "jest": "^24.8.0",
+        "jest": "^26.0.1",
         "lint-staged": "~8.2.0",
         "prettier": "^1.18.2",
         "supertest": "^4.0.2",
-        "ts-jest": "^24.0.2",
+        "ts-jest": "^26.1.0",
         "ts-node": "^8.1.0",
         "tsc-watch": "^2.2.1",
         "tsconfig-paths": "^3.8.0",
@@ -78,7 +78,7 @@
         "tslint-consistent-codestyle": "^1.15.1",
         "tslint-eslint-rules": "^5.4.0",
         "tslint-plugin-prettier": "^2.0.1",
-        "typescript": "^3.4.3"
+        "typescript": "^3.8.3"
     },
     "jest": {
         "moduleFileExtensions": [
