@@ -1,5 +1,5 @@
 import { ModuleMetadata } from '@nestjs/common/interfaces';
-import { ConfigurationOptions } from 'aws-sdk/lib/config';
+import { ConfigurationOptions } from 'aws-sdk';
 
 /**
  * @export

@@ -1,7 +1,7 @@
 import { Injectable, Inject, Logger, HttpStatus, HttpException } from '@nestjs/common';
 import { SNS } from 'aws-sdk';
 import { PublishResponse, PublishInput } from 'aws-sdk/clients/sns';
-import { ConfigurationOptions } from 'aws-sdk/lib/config';
+import { ConfigurationOptions } from 'aws-sdk';
 
 import { CONFIG_CONNECTION_OPTIONS } from '../constants';
 
