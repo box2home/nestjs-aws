@@ -58,7 +58,7 @@ import { Module } from '@nestjs/common';
 
 })
 export class AppModule { }
-`
+```
 Depending on which service you want to use you have access to the method of the requested service (SNS_SERVICE, S3_SERVICE,SES_SERVICE) which you can inject into any provider.
 
 HERE AN EXAMPLE OF AN SNS SERVICE :
