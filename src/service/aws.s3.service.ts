@@ -3,6 +3,7 @@ import * as AWS from 'aws-sdk';
 import { exception } from 'console';
 
 import { CONFIG_CONNECTION_OPTIONS } from '../constants';
+import { IGetSignedUrlRequest } from '../interfaces/s3-get-signed-url-request.interface';
 
 /**
  * @export
@@ -39,22 +40,36 @@ export class AwsS3Service {
                 }, HttpStatus.BAD_REQUEST);
             });
     }
-    
-    async getObject(params: AWS.S3.Types.GetObjectAclRequest){
+
+    async getObject(params: AWS.S3.Types.GetObjectAclRequest) {
         try {
             return this._s3
             .getObject(params)
             .promise()
-            .then(fileData => {
+            .then((fileData) => {
                 return fileData.Body.toString('utf-8');
-            })
+            });
         } catch (error) {
             throw new HttpException({
                 statusCode: error.statusCode,
                 message: 'error',
                 data: error,
-            }, HttpStatus.BAD_REQUEST)
+            }, HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    async getUploadSignedUrl(params: IGetSignedUrlRequest) {
+        try {
+            return this._s3
+            .getSignedUrlPromise('putObject', {...params, ACL: 'public-read'})
+            .then((signedUrl: string) => {
+                Logger.log(`signed url generated successfully: ${signedUrl}`);
+                return signedUrl;
+            });
+        } catch (err) {
+            Logger.error(err.message, `unable to generate the signed url: ${JSON.stringify(err)}`);
+            throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
+        }
     }
 }

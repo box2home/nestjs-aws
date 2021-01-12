@@ -5,6 +5,7 @@ export * from './service/aws.sns.service';
 export * from './service/generator.service';
 export * from './aws.module';
 export * from './interfaces/IFile';
+export * from './interfaces/s3-get-signed-url-request.interface';
 export * from './interfaces/aws-ses-module-options.interface';
 export * from './interfaces/aws-s3-module-options.interface';
 export * from './interfaces/aws-sns-module-options.interface';
