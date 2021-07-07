@@ -1,5 +1,6 @@
 import { Injectable, Inject, Logger, HttpStatus, HttpException } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
+import { CopyObjectRequest } from 'aws-sdk/clients/s3';
 import { exception } from 'console';
 
 import { CONFIG_CONNECTION_OPTIONS } from '../constants';
@@ -67,6 +68,18 @@ export class AwsS3Service {
                 Logger.log(`signed url generated successfully: ${signedUrl}`);
                 return signedUrl;
             });
+        } catch (err) {
+            Logger.error(err.message, `unable to generate the signed url: ${JSON.stringify(err)}`);
+            throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    async copyObject(params: CopyObjectRequest) {
+        try {
+            return this._s3.copyObject(params, function(err, data) {
+                if (err) Logger.log(err, err.stack); // an error occurred
+                else     Logger.log(data);           // successful response
+              });
         } catch (err) {
             Logger.error(err.message, `unable to generate the signed url: ${JSON.stringify(err)}`);
             throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
