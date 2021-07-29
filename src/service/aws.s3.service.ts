@@ -6,7 +6,12 @@ import {
     HttpException,
 } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
-import { CopyObjectRequest, DeleteObjectRequest } from 'aws-sdk/clients/s3';
+import {
+    CopyObjectRequest,
+    DeleteObjectRequest,
+    ListObjectsOutput,
+    ListObjectsRequest,
+} from 'aws-sdk/clients/s3';
 import { exception } from 'console';
 
 import { CONFIG_CONNECTION_OPTIONS } from '../constants';
@@ -129,6 +134,15 @@ export class AwsS3Service {
                 err.message,
                 `unable to delete object: ${JSON.stringify(err)}`,
             );
+            throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    async listObjects(params: ListObjectsRequest) {
+        try {
+            return this._s3.listObjects(params).promise();
+        } catch (err) {
+            Logger.error(err.message, `unable to  ${JSON.stringify(err)}`);
             throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
         }
     }
