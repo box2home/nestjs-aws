@@ -148,11 +148,9 @@ export class AwsS3Service {
     async getUrlFileFromBucket(params: AWS.S3.Types.HeadObjectRequest) {
         try {
             // Check if the object exists
-            await this._s3.headObject(params).promise();
+            const signedUrl =  await this._s3.headObject(params).promise();
     
-            // If it exists, generate a signed URL for the getObject operation
-            const signedUrl = this._s3.getSignedUrl('getObject', params);
-            return signedUrl?true:false;
+            return signedUrl ? true: false
         } catch (err) {
             // Log the error and throw an exception
             console.error('Error checking object existence:', err.message);
