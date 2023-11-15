@@ -9,10 +9,8 @@ import * as AWS from 'aws-sdk';
 import {
     CopyObjectRequest,
     DeleteObjectRequest,
-    ListObjectsOutput,
     ListObjectsRequest,
 } from 'aws-sdk/clients/s3';
-import { exception } from 'console';
 
 import { CONFIG_CONNECTION_OPTIONS } from '../constants';
 import { IGetSignedUrlRequest } from '../interfaces/s3-get-signed-url-request.interface';
@@ -144,6 +142,20 @@ export class AwsS3Service {
         } catch (err) {
             Logger.error(err.message, `unable to  ${JSON.stringify(err)}`);
             throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    async getUrlFileFromBucket(params: AWS.S3.Types.HeadObjectRequest) {
+        try {
+            // Check if the object exists
+            const signedUrl =  await this._s3.headObject(params).promise();
+    
+            return signedUrl ? true: false
+        } catch (err) {
+            // Log the error and throw an exception
+            console.error('Error checking object existence:', err.message);
+            Logger.error(err.message, `Unable to ${JSON.stringify(err)}`);
+            return false
         }
     }
 }
