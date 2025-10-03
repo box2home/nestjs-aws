@@ -63,6 +63,39 @@ export class AwsS3Service {
             });
     }
 
+    async getObjectContent(
+        params: AWS.S3.GetObjectRequest,
+        encoding: BufferEncoding | 'buffer' = 'utf-8',
+    ): Promise<string | Buffer> {
+        try {
+            const fileData = await this._s3.getObject(params).promise();
+
+            if (!fileData.Body) {
+                throw new Error('S3 object Body is empty');
+            }
+
+            const buffer =
+                Buffer.isBuffer(fileData.Body)
+                    ? fileData.Body
+                    : Buffer.from(fileData.Body as any);
+
+            if (encoding === 'buffer') {
+                return buffer;
+            }
+
+            return buffer.toString(encoding);
+        } catch (error) {
+            throw new HttpException(
+                {
+                    statusCode: error.statusCode ?? 500,
+                    message: 'error',
+                    data: error,
+                },
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+    }
+
     async getObject(params: AWS.S3.Types.GetObjectAclRequest) {
         try {
             return this._s3
@@ -148,14 +181,14 @@ export class AwsS3Service {
     async checkExistenceFileFromBucket(params: AWS.S3.Types.HeadObjectRequest) {
         try {
             // Check if the object exists
-            const signedUrl =  await this._s3.headObject(params).promise();
-    
-            return signedUrl ? true: false
+            const signedUrl = await this._s3.headObject(params).promise();
+
+            return signedUrl ? true : false;
         } catch (err) {
             // Log the error and throw an exception
             console.error('Error checking object existence:', err.message);
             Logger.error(err.message, `Unable to ${JSON.stringify(err)}`);
-            return false
+            return false;
         }
     }
 }
