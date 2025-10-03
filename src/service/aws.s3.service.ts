@@ -63,46 +63,13 @@ export class AwsS3Service {
             });
     }
 
-    async getObjectContent(
-        params: AWS.S3.GetObjectRequest,
-        encoding: BufferEncoding | 'buffer' = 'utf-8',
-    ) {
-        try {
-            const fileData = await this._s3.getObject(params).promise();
-
-            if (!fileData.Body) {
-                throw new Error('S3 object Body is empty');
-            }
-
-            const buffer = Buffer.isBuffer(fileData.Body)
-                ? fileData.Body
-                : Buffer.from(fileData.Body as any);
-
-            if (encoding === 'buffer') {
-                return buffer;
-            }
-
-            return buffer.toString(encoding);
-        } catch (error) {
-            throw new HttpException(
-                {
-                    statusCode: error.statusCode ?? 500,
-                    message: 'error',
-                    data: error,
-                },
-                HttpStatus.BAD_REQUEST,
-            );
-        }
-    }
-
-
-    async getObject(params: AWS.S3.Types.GetObjectAclRequest) {
+    async getObject(params: AWS.S3.Types.GetObjectAclRequest, encoding: BufferEncoding = 'utf8') {
         try {
             return this._s3
                 .getObject(params)
                 .promise()
                 .then(fileData => {
-                    return fileData.Body.toString('utf-8');
+                    return fileData.Body.toString(encoding);
                 });
         } catch (error) {
             throw new HttpException(
