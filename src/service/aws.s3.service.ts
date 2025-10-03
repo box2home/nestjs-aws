@@ -66,7 +66,7 @@ export class AwsS3Service {
     async getObjectContent(
         params: AWS.S3.GetObjectRequest,
         encoding: BufferEncoding | 'buffer' = 'utf-8',
-    ): Promise<string | Buffer> {
+    ) {
         try {
             const fileData = await this._s3.getObject(params).promise();
 
@@ -74,10 +74,9 @@ export class AwsS3Service {
                 throw new Error('S3 object Body is empty');
             }
 
-            const buffer =
-                Buffer.isBuffer(fileData.Body)
-                    ? fileData.Body
-                    : Buffer.from(fileData.Body as any);
+            const buffer = Buffer.isBuffer(fileData.Body)
+                ? fileData.Body
+                : Buffer.from(fileData.Body as any);
 
             if (encoding === 'buffer') {
                 return buffer;
@@ -95,6 +94,7 @@ export class AwsS3Service {
             );
         }
     }
+
 
     async getObject(params: AWS.S3.Types.GetObjectAclRequest) {
         try {
